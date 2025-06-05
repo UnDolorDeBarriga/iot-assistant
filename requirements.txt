@@ -1,0 +1,5 @@
+paho-mqtt
+pvporcupine
+vosk
+pyaudio
+python-dotenv
