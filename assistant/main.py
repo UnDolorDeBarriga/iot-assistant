@@ -5,10 +5,10 @@ import os
 load_dotenv(dotenv_path="config/settings.env")
 
 # Access config variables
-mqtt_host = os.getenv("MQTT_HOST", "localhost")
-mqtt_port = int(os.getenv("MQTT_PORT", "1883"))
-mqtt_user = os.getenv("MQTT_USER", None)
-mqtt_pass = os.getenv("MQTT_PASS", None)
+mqtt_host = os.getenv("MQTT_HOST")
+mqtt_port = int(os.getenv("MQTT_PORT"))
+mqtt_user = os.getenv("MQTT_USER")
+mqtt_pass = os.getenv("MQTT_PASS")
 
 print(f"[INFO] Connecting to MQTT broker at {mqtt_host}:{mqtt_port} as {mqtt_user or 'anonymous'}")
 
@@ -16,6 +16,7 @@ print(f"[INFO] Connecting to MQTT broker at {mqtt_host}:{mqtt_port} as {mqtt_use
 import paho.mqtt.client as mqtt
 
 client = mqtt.Client()
+client.username_pw_set(mqtt_user, mqtt_pass)
 if mqtt_user and mqtt_pass:
     client.username_pw_set(mqtt_user, mqtt_pass)
 
@@ -23,3 +24,4 @@ client.connect(mqtt_host, mqtt_port)
 client.loop_start()
 
 # Your logic here — wake word loop, etc.
+print("[INFO] MQTT client connected and running...")

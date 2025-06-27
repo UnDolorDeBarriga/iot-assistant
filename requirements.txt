@@ -3,3 +3,5 @@ pvporcupine
 vosk
 pyaudio
 python-dotenv
+sounddevice
+noisereduce 
