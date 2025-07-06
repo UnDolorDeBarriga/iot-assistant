@@ -4,4 +4,6 @@ vosk
 pyaudio
 python-dotenv
 sounddevice
-noisereduce 
+noisereduce
+python-dotenv
+adapt-parser

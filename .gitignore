@@ -1,4 +1,5 @@
 .venv
 models/**
+!models/*.ppn
 config/settings.env
 config/mosquitto/passwd
