@@ -58,16 +58,6 @@ def transcribe_from_audio(file_path):
         if text:
             yield text
 
-def listen():
-    parser = build_parser()
-    for text in listen_and_transcribe():
-        print(f"[MAIN] Received: {text}")
-        cleaned = clean_command(text)
-        print(f"[CLEANED] {cleaned}")
-        temp = parser_text(parser, text)
-        print(f"[TMP] {temp}")
-
-
 def clean_command(text: str) -> str:
     text = text.lower()
     replacements = [
@@ -100,3 +90,13 @@ def clean_command(text: str) -> str:
     for pattern, replacement in replacements:
         text = re.sub(pattern, replacement, text)
     return text
+
+
+def listen():
+    parser = build_parser()
+    for text in listen_and_transcribe():
+        print(f"[MAIN] Received: {text}")
+        cleaned = clean_command(text)
+        print(f"[CLEANED] {cleaned}")
+        temp = parser_text(parser, text)
+        print(f"[TMP] {temp}")
