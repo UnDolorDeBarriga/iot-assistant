@@ -91,7 +91,6 @@ def clean_command(text: str) -> str:
         text = re.sub(pattern, replacement, text)
     return text
 
-
 def listen():
     parser = build_parser()
     for text in listen_and_transcribe():
@@ -100,3 +99,16 @@ def listen():
         print(f"[CLEANED] {cleaned}")
         temp = parser_text(parser, text)
         print(f"[TMP] {temp}")
+
+def listen_once():
+    print("[STT] Listening for a command...")
+    rec = vosk.KaldiRecognizer(model, 16000)
+    with sd.RawInputStream(samplerate=16000, blocksize=8000, dtype='int16',
+                           channels=1, callback=callback):
+        while True:
+            data = q.get()
+            if rec.AcceptWaveform(data):
+                result = json.loads(rec.Result())
+                text = result.get("text", "")
+                if text:
+                    return text

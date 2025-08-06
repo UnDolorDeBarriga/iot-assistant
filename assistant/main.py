@@ -1,27 +1,31 @@
-from dotenv import load_dotenv
-import os
+from assistant.sst import clean_command, listen_once
+from assistant.parser import build_parser, parser_text
+from assistant.mqtt_client import publish_command
+from assistant.wake import wait_for_wake_word, cleanup
 
-# Load config file
-load_dotenv(dotenv_path="config/settings.env")
+def handle_command(text, parser):
+    print(f"[COMMAND] Raw: {text}")
+    cleaned = clean_command(text)
+    print(f"[COMMAND] Cleaned: {cleaned}")
+    intent = parser_text(parser, cleaned)
+    if intent and 'Device' in intent and 'Action' in intent:
+        subject = intent['Device']
+        action = intent['Action']
+        publish_command(subject, action)
+    else:
+        print("[ERROR] Could not understand command intent.")
 
-# Access config variables
-mqtt_host = os.getenv("MQTT_HOST")
-mqtt_port = int(os.getenv("MQTT_PORT"))
-mqtt_user = os.getenv("MQTT_USER")
-mqtt_pass = os.getenv("MQTT_PASS")
+def main():
+    parser = build_parser()
+    try:
+        while True:
+            wait_for_wake_word()
+            text = listen_once()
+            handle_command(text, parser)
+    except KeyboardInterrupt:
+        print("[SYSTEM] Interrupted by user.")
+    finally:
+        cleanup()
 
-print(f"[INFO] Connecting to MQTT broker at {mqtt_host}:{mqtt_port} as {mqtt_user or 'anonymous'}")
-
-# Example usage with paho-mqtt
-import paho.mqtt.client as mqtt
-
-client = mqtt.Client()
-client.username_pw_set(mqtt_user, mqtt_pass)
-if mqtt_user and mqtt_pass:
-    client.username_pw_set(mqtt_user, mqtt_pass)
-
-client.connect(mqtt_host, mqtt_port)
-client.loop_start()
-
-# Your logic here — wake word loop, etc.
-print("[INFO] MQTT client connected and running...")
+if __name__ == "__main__":
+    main()

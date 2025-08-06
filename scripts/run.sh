@@ -14,4 +14,4 @@ source .venv/bin/activate
 
 # Run main
 echo "[RUN] Starting assistant..."
-python3 assistant/main.py
+python -m assistant.main

@@ -9,6 +9,12 @@
 ```bash
 python -m assistant.testing
 python -m assistant.wakeword_test
+python -m assistant.temp
+```
+
+
+```
+arecord -l
 ```
 
 Integrate wakeword + SST
