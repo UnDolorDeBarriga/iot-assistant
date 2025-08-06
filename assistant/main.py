@@ -10,7 +10,10 @@ def handle_command(text, parser):
     intent = parser_text(parser, cleaned)
     if intent and 'Device' in intent and 'Action' in intent:
         subject = intent['Device']
-        action = intent['Action']
+        if intent['Action'] in ["turn on", "open"]:
+            action = "True"
+        elif intent['Action'] in ["turn off", "close"]:
+            action = "False"
         publish_command(subject, action)
     else:
         print("[ERROR] Could not understand command intent.")
